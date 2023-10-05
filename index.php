@@ -1,3 +1,3 @@
 <?php
-require './src/toolkit.php';
-dd("toto");
+require './configs/bootstrap.php';
+dd($globalConfigs);
