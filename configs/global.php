@@ -2,6 +2,5 @@
 $globalConfigs =
 [
     "debugMode" => true,
-]
+];
 
-?>
