@@ -6,7 +6,7 @@ $statement = $connection->query("SELECT * FROM contacts WHERE 1");
 $data = $statement->fetchAll(PDO::FETCH_ASSOC);
 
 //fonction getById
-$statement = $connection->query("SELECT * FROM contacts WHERE name =  'Delaistre' AND surname = '".htmlspecialchars( $_GET["surname"])."'");
+$statement = $connection->query("SELECT * FROM contacts WHERE name =  'Girault' AND surname = '".htmlspecialchars( $_GET["surname"])."'");
 $data = $statement->fetchAll(PDO::FETCH_ASSOC);
 
 //fonction create 

@@ -45,49 +45,53 @@ function fromInc($name){
 //     }
 
 // }
-
-function getAllContacts($connection) {
+function grosseFonction($connection, $operation, $id = null, $name = null, $surname = null, $newStatus = null) {
     global $connection;
-    $statement = $connection->query("SELECT * FROM contacts");
-    return $statement->fetchAll(PDO::FETCH_ASSOC);
+
+    switch ($operation) {
+        case 'getAll':
+            $statement = $connection->query("SELECT * FROM contacts");
+            return $statement->fetchAll(PDO::FETCH_ASSOC);
+
+        case 'getById':
+            $statement = $connection->prepare("SELECT * FROM contacts WHERE id = ?");
+            $statement->bindParam(1, $id);
+            $statement->execute();
+            return $statement->fetch(PDO::FETCH_ASSOC);
+
+        case 'create':
+            $statement = $connection->prepare("INSERT INTO contacts (name, surname, status) VALUES (?, ?, 'online')");
+            $statement->bindParam(1, $name);
+            $statement->bindParam(2, $surname);
+            return $statement->execute();
+        
+        case 'read':
+            $statement = $connection->prepare("SELECT * FROM contacts WHERE id = ?");
+            $statement->bindParam(1, $id);
+            $statement->execute();
+            return $statement->fetch(PDO::FETCH_ASSOC);
+
+        case 'delete':
+            $statement = $connection->prepare("DELETE FROM contacts WHERE id = ?");
+            $statement->bindParam(1, $id);
+            return $statement->execute();
+
+        case 'update':
+            $statement = $connection->prepare("UPDATE contacts SET status = ? WHERE id = ?");
+            $statement->bindParam(1, $newStatus);
+            $statement->bindParam(2, $id);
+            return $statement->execute();
+
+        default:
+            return false;
+    }
 }
 
-function getContactById($connection, $id) {
-    global $connection;
-    $statement = $connection->prepare("SELECT * FROM contacts WHERE id = ?");
-    $statement->bindParam(1, $id);
-    $statement->execute();
-    return $statement->fetch(PDO::FETCH_ASSOC);
-}
-
-function createContact($connection, $name, $surname) {
-    global $connection;
-    $statement = $connection->prepare("INSERT INTO contacts (name, surname, status) VALUES (?, ?, 'online')");
-    $statement->bindParam(1, $name);
-    $statement->bindParam(2, $surname);
-    return $statement->execute();
-}
-
-function deleteContactById($connection, $id) {
-    global $connection;
-    $statement = $connection->prepare("DELETE FROM contacts WHERE id = ?");
-    $statement->bindParam(1, $id);
-    return $statement->execute();
-}
-
-function updateContactStatusById($connection, $id, $newStatus) {
-    global $connection;
-    $statement = $connection->prepare("UPDATE contacts SET status = ? WHERE id = ?");
-    $statement->bindParam(1, $newStatus);
-    $statement->bindParam(2, $id);
-    return $statement->execute();
-}
-
-
-$allContacts = getAllContacts($connection);
-$contact = getContactById($connection, 1);
-createContact($connection, "Nouveau", "Contact");
-deleteContactById($connection, 3);
-updateContactStatusById($connection, 2, "offline");
+$allContacts = grosseFonction($connection, 'getAll');
+$contact = grosseFonction($connection, 'getById', 1);
+// grosseFonction($connection, 'create', null, "Nouveau", "Contact");
+// grosseFonction($connection, 'read', 1);
+// grosseFonction($connection, 'delete', 3);
+// grosseFonction($connection, 'update', 2, "offline");
 
 ?>
